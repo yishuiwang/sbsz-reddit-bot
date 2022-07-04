@@ -1,5 +1,5 @@
 # Welcome to sbsz-reddit-bot 👋
-![Version](https://img.shields.io/badge/version- 1.0.0-blue.svg?cacheSeconds=2592000)
+[![Version](https://img.shields.io/badge/version- 1.0.0-blue.svg?cacheSeconds=2592000)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > 个人社区的管理bot
