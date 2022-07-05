@@ -1,11 +1,19 @@
 # Welcome to sbsz-reddit-bot 👋
 
+<<<<<<< HEAD
 ## language change
 
-English / [中文](README_CN.md)
+// English / [中文](README_CN.md)
 
 ![Version](https://img.shields.io/badge/version- 1.0.0-blue.svg?cacheSeconds=2592000)
+=======
+>>>>>>> main
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/yishuiwang/sbsz-reddit-bot)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/yishuiwang/sbsz-reddit-bot)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/yishuiwang/sbsz-reddit-bot)
+
+
 
 > 个人社区的管理bot
 
