@@ -6,15 +6,22 @@ import (
 	"github.com/turnage/graw/reddit"
 	"io/ioutil"
 	"os"
+	"sbsz-reddit-bot/basic"
 	"time"
 )
 
 type BotConfig struct {
 	UserAgent    string `json:"user_agent"`
 	ClientId     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
 	Username     string `json:"username"`
 	Password     string `json:"password"`
+	ClientSecret string `json:"client_secret"`
+}
+
+// NewRobot 返回Robot
+func NewRobot(filename string) (basic.Robot, error) {
+	b, err := NewBotFromFile(filename, 0)
+	return basic.Robot{Bot: b}, err
 }
 
 func NewBotFromFile(filename string, rate time.Duration) (reddit.Bot, error) {
@@ -38,6 +45,7 @@ func NewBotFromFile(filename string, rate time.Duration) (reddit.Bot, error) {
 	)
 }
 
+// ReadJsonFile 从json文件读取配置
 func ReadJsonFile(path string) (BotConfig, error) {
 	jsonFile, err := os.Open(path)
 	if err != nil {
@@ -47,7 +55,5 @@ func ReadJsonFile(path string) (BotConfig, error) {
 	body, _ := ioutil.ReadAll(jsonFile)
 	config := BotConfig{}
 	json.Unmarshal(body, &config)
-
 	return config, err
-
 }
