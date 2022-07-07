@@ -1,19 +1,16 @@
 package main
 
 import (
-	"fmt"
 	_ "github.com/turnage/graw"
-	"sbsz-reddit-bot/basic"
-	"sbsz-reddit-bot/utils"
 )
 
 func main() {
-	sbsz, err := utils.NewRobot("config/config.json")
-	if err != nil {
-		fmt.Println("Failed to create bot handle: ", err)
-		return
-	}
+	//sbsz, err := config.NewRobot("config/config.json")
+	//if err != nil {
+	//	fmt.Println("Failed to create bot handle: ", err)
+	//	return
+	//}
+	//
+	//sbsz.Post("/r/sbsz", "bot post", "bot text")
 
-	p := sbsz.GetPostInfo("/r/sbsz/comments/vrr2jx/测试发帖/")
-	basic.CommentTree(p)
 }

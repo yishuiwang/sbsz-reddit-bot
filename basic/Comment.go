@@ -49,8 +49,12 @@ func printTree(list []*Comment, parent string, depth int) {
 	}
 }
 
+// ReplyComment 根据title内容自动回复
 func (r Robot) ReplyComment(title string, reply string, postUrl string) error {
-	post := r.GetPostInfo(postUrl)
+	post, err := r.GetPostInfo(postUrl)
+	if err != nil {
+		return err
+	}
 	var list []*Comment
 	list = NewList(list, post.Replies)
 	text := reply + "\n\n" + tail
@@ -62,4 +66,9 @@ func (r Robot) ReplyComment(title string, reply string, postUrl string) error {
 		}
 	}
 	return nil
+}
+
+// DeleteComment 删除回复
+func (r Robot) DeleteComment() {
+
 }

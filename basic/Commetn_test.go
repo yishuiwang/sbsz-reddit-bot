@@ -2,12 +2,12 @@ package basic
 
 import (
 	"fmt"
-	"sbsz-reddit-bot/utils"
+	"sbsz-reddit-bot/config"
 	"testing"
 )
 
 var (
-	sbsz, _ = utils.NewRobot("config/config.json")
+	sbsz, _ = config.NewRobot("config/config.json")
 )
 
 func TestReplyComment(t *testing.T) {
