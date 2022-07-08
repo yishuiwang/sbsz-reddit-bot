@@ -1,17 +1,18 @@
 package client
 
 import (
-	"fmt"
-	"io/ioutil"
+	"errors"
+	"io"
 	"net/http"
-	"net/url"
-	"sbsz-reddit-bot/config"
-	"strings"
+	"sbsz-reddit-bot/basic"
 	"time"
 )
 
 const (
-	TOKEN_ACCESS_ENDPOINT = "https://www.reddit.com/api/v1/access_token"
+	ConfigPath          = "config/config.json"
+	OAuthEndpoint       = "https://oauth.reddit.com"
+	TokenAccessEndpoint = "https://www.reddit.com/api/v1/access_token"
+	UserAgent           = "<reddit>:<version 1.0.0> (by /u/sbsznmsl)"
 )
 
 type HttpClient struct {
@@ -26,43 +27,60 @@ type HttpOptions struct {
 	Timeout time.Duration
 }
 
-//func (c HttpClient) Do(req *http.Request) (*http.Response, error) {
-//	//req, err := http.NewRequest(method, url, payload)
-//	//if err != nil {
-//	//	return nil, err
-//	//}
-//	//
-//	//// Set the auth for the request.
-//	//req.SetBasicAuth(username, password)
-//	//
-//	//return http.DefaultClient.Do(req)
-//}
-
-func TokenAccess(path string) {
-	botconf, err := config.ReadJsonFile(path)
+// NewHttpRequest 创建http请求
+func NewHttpRequest(method string, api string, body io.Reader) (*http.Request, error) {
+	token, err := basic.TokenAccess("config/json")
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
-	data := url.Values{}
-	data.Set("username", botconf.Username)
-	data.Set("password", botconf.Password)
-	data.Set("grant_type", "password")
-	body := strings.NewReader(data.Encode())
-	req, err := http.NewRequest("POST", TOKEN_ACCESS_ENDPOINT, body)
-	req.Header.Add("User-Agent", "sbsz/api")
+	Request, err := http.NewRequest(method, OAuthEndpoint+api, body)
+	Request.Header.Add("User-Agent", UserAgent)
+	Request.Header.Add("Authorization", "Bearer "+token)
+	return Request, err
+}
 
-	if err != nil {
-		fmt.Println(err)
+// NewHttpClient 创建新Http请求器
+func NewHttpClient(option *HttpOptions) *HttpClient {
+	if option == nil {
+		option = new(HttpOptions)
 	}
-	req.SetBasicAuth(botconf.ClientId, botconf.ClientSecret)
+	if option.TryTime == 0 {
+		option.TryTime = 1
+	}
+	if option.Timeout == 0 {
+		option.Timeout = 10 * time.Second
+	}
+	return &HttpClient{
+		HttpOptions: *option,
+		client:      &http.Client{Timeout: option.Timeout},
+		header:      make(map[string]string),
+	}
+}
 
-	var c http.Client
-	response, err := c.Do(req)
-	if err != nil {
-		fmt.Println(err)
+func (c *HttpClient) AddCookie(cookie ...*http.Cookie) {
+	c.cookies = append(c.cookies, cookie...)
+}
+
+func (c HttpClient) Do(req *http.Request) (*http.Response, error) {
+	var res *http.Response
+	err := errors.New("TryTime is zero, send no http request")
+	if req == nil {
+		return nil, errors.New("req is nil")
 	}
-	bytes, _ := ioutil.ReadAll(response.Body)
-	fmt.Println(string(bytes))
-	fmt.Println(response.Status)
-	fmt.Println(response)
+	for key, val := range c.header { // 设置 header
+		req.Header.Add(key, val)
+	}
+	for _, cookie := range c.cookies { // 添加 cookie
+		if cookie == nil {
+			continue
+		}
+		req.AddCookie(cookie)
+	}
+	for i := 0; i < c.TryTime; i++ { // 进行指定次数的重试
+		res, err = c.client.Do(req)
+		if err == nil {
+			break
+		}
+	}
+	return res, err
 }

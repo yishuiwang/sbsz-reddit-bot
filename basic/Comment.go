@@ -3,6 +3,10 @@ package basic
 import (
 	"fmt"
 	"github.com/turnage/graw/reddit"
+	"io/ioutil"
+	"net/url"
+	"sbsz-reddit-bot/utils/client"
+	"strings"
 )
 
 type Comment struct {
@@ -49,26 +53,49 @@ func printTree(list []*Comment, parent string, depth int) {
 	}
 }
 
-// ReplyComment 根据title内容自动回复
-func (r Robot) ReplyComment(title string, reply string, postUrl string) error {
-	post, err := r.GetPostInfo(postUrl)
-	if err != nil {
-		return err
-	}
-	var list []*Comment
-	list = NewList(list, post.Replies)
-	text := reply + "\n\n" + tail
-	for i := 0; i < len(list); i++ {
-		if list[i].Body == title {
-			if err := r.Bot.Reply(list[i].Id, text); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
+// ReplyComment 回复评论
+func (r Robot) ReplyComment(commentId string, text string) error {
+	err := r.Bot.Reply(commentId, text)
+	return err
 }
 
 // DeleteComment 删除回复
-func (r Robot) DeleteComment() {
+func (r Robot) DeleteComment(commentId string) {
+	api := "/api/del"
+
+	v := url.Values{}
+	v.Set("id", commentId)
+
+	request, err := client.NewHttpRequest("POST", api, strings.NewReader(v.Encode()))
+	client := client.NewHttpClient(nil)
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Println(err)
+	}
+	body, _ := ioutil.ReadAll(response.Body)
+	fmt.Println(string(body))
 
 }
+
+func (r Robot) EditComment() {
+	
+}
+
+// ReplyComment 根据title内容自动回复
+//func (r Robot) ReplyComment(title string, reply string, postUrl string) error {
+//	post, err := r.GetPostInfo(postUrl)
+//	if err != nil {
+//		return err
+//	}
+//	var list []*Comment
+//	list = NewList(list, post.Replies)
+//	text := reply + "\n\n" + tail
+//	for i := 0; i < len(list); i++ {
+//		if list[i].Body == title {
+//			if err := r.Bot.Reply(list[i].Id, text); err != nil {
+//				return err
+//			}
+//		}
+//	}
+//	return nil
+//}
