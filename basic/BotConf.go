@@ -82,7 +82,7 @@ func TokenAccess(path string) (string, error) {
 	req, _ := http.NewRequest("POST", "https://www.reddit.com/api/v1/access_token", body)
 	req.Header.Add("User-Agent", "<reddit>:<version 1.0.0> (by /u/sbsznmsl)")
 
-	req.SetBasicAuth("9zm724zz3tspkzeLSMY16A", "u-546d-1GCNg2IaH2f0jSCgtNBY-VA")
+	req.SetBasicAuth(botConf.ClientId, botConf.ClientSecret)
 
 	var c http.Client
 	response, err := c.Do(req)

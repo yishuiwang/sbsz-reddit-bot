@@ -1,10 +1,9 @@
-package client
+package basic
 
 import (
 	"errors"
 	"io"
 	"net/http"
-	"sbsz-reddit-bot/basic"
 	"time"
 )
 
@@ -29,7 +28,7 @@ type HttpOptions struct {
 
 // NewHttpRequest 创建http请求
 func NewHttpRequest(method string, api string, body io.Reader) (*http.Request, error) {
-	token, err := basic.TokenAccess("config/json")
+	token, err := TokenAccess(ConfigPath)
 	if err != nil {
 		return nil, err
 	}
@@ -67,16 +66,19 @@ func (c HttpClient) Do(req *http.Request) (*http.Response, error) {
 	if req == nil {
 		return nil, errors.New("req is nil")
 	}
-	for key, val := range c.header { // 设置 header
+	// 设置 header
+	for key, val := range c.header {
 		req.Header.Add(key, val)
 	}
-	for _, cookie := range c.cookies { // 添加 cookie
+	// 添加 cookie
+	for _, cookie := range c.cookies {
 		if cookie == nil {
 			continue
 		}
 		req.AddCookie(cookie)
 	}
-	for i := 0; i < c.TryTime; i++ { // 进行指定次数的重试
+	// 进行指定次数的重试
+	for i := 0; i < c.TryTime; i++ {
 		res, err = c.client.Do(req)
 		if err == nil {
 			break

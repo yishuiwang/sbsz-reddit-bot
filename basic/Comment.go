@@ -3,9 +3,7 @@ package basic
 import (
 	"fmt"
 	"github.com/turnage/graw/reddit"
-	"io/ioutil"
 	"net/url"
-	"sbsz-reddit-bot/utils/client"
 	"strings"
 )
 
@@ -60,25 +58,21 @@ func (r Robot) ReplyComment(commentId string, text string) error {
 }
 
 // DeleteComment 删除回复
-func (r Robot) DeleteComment(commentId string) {
+func (r Robot) DeleteComment(commentId string) error {
 	api := "/api/del"
 
 	v := url.Values{}
 	v.Set("id", commentId)
 
-	request, err := client.NewHttpRequest("POST", api, strings.NewReader(v.Encode()))
-	client := client.NewHttpClient(nil)
-	response, err := client.Do(request)
+	request, err := NewHttpRequest("POST", api, strings.NewReader(v.Encode()))
+	client := NewHttpClient(nil)
+	_, err = client.Do(request)
 	if err != nil {
 		fmt.Println(err)
 	}
-	body, _ := ioutil.ReadAll(response.Body)
-	fmt.Println(string(body))
 
-}
+	return err
 
-func (r Robot) EditComment() {
-	
 }
 
 // ReplyComment 根据title内容自动回复

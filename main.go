@@ -13,6 +13,6 @@ func main() {
 		return
 	}
 
-	sbsz.DeleteComment("t1_iexofui")
+	sbsz.DeletePost("t3_vthyma")
 
 }

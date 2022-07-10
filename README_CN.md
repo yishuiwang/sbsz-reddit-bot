@@ -17,11 +17,21 @@ git clone https://github.com/yishuiwang/sbsz-reddit-bot.git
 
 ## 功能
 
-### 基本功能
+<details>
+<summary>评论管理</summary>
+<ul>
+  <li>匹配关键词并回复评论</li>
+  <li>匹配关键词并删除评论</li>
+</ul>
 
-- 发帖
-- 回复评论
-- 服务列表
+<details>
+<summary>发帖管理</summary>
+<ul>
+  <li>删除问题贴</li>
+  <li>匹配关键词并删除评论</li>
+</ul>
+
+
 
 
 
