@@ -26,6 +26,10 @@ type HttpOptions struct {
 	Timeout time.Duration
 }
 
+func (c *HttpClient) SetHeader(key string, val string) {
+	c.header[key] = val
+}
+
 // NewHttpRequest 创建http请求
 func NewHttpRequest(method string, api string, body io.Reader) (*http.Request, error) {
 	token, err := TokenAccess(ConfigPath)
