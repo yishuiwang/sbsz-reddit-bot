@@ -45,55 +45,63 @@ type APIRequest struct {
 	R18   int      `json:"r18"`
 }
 
-func GetImageInfo(tags []string) (ResponseInfo, error) {
+func GetImage(tags []string) error {
 	rule := APIRequest{
-		Num:   1,
+		Num:   6,
 		Tags:  tags,
 		Size:  []string{"original"},
 		Proxy: Proxy,
-		R18:   2,
+		R18:   0,
 	}
 	body, _ := json.Marshal(rule)
 	request, err := http.NewRequest("POST", LoliconAPI, bytes.NewReader(body))
 	if err != nil {
-		return ResponseInfo{}, err
+		return err
 	}
 	c := NewHttpClient(&HttpOptions{TryTime: 3, Timeout: 15 * time.Second})
 	c.SetHeader("Content-Type", "application/json")
 	response, err := c.Do(request)
 	if err != nil {
-		return ResponseInfo{}, err
+		return err
 	}
 	data, _ := ioutil.ReadAll(response.Body)
 	responseInfo := ResponseInfo{}
 	err = json.Unmarshal(data, &responseInfo)
 	if err != nil {
-		return ResponseInfo{}, err
+		return err
 	}
-	return responseInfo, nil
-}
 
-func DownLoadImage(info ResponseInfo) {
 	var filename []string
-	for i := 0; i < len(info.Data); i++ {
-		pid := info.Data[i].Pid
+	for i := 0; i < len(responseInfo.Data); i++ {
+		pid := responseInfo.Data[i].Pid
 		filename = append(filename, strconv.FormatInt(pid, 10)+".jpg")
 	}
-	for i := 0; i < len(info.Data); i++ {
-		url := info.Data[i].Urls["original"]
-		img, err := http.Get(url)
-		if err != nil {
-			fmt.Println(err)
-		}
-		content, _ := ioutil.ReadAll(img.Body)
-		out, err := os.Create(FilePath + filename[i])
-		if err != nil {
-			fmt.Println(err)
-		}
-		out.Write(content)
-		if err != nil {
-			fmt.Println(err)
-		}
+
+	for i := 0; i < len(responseInfo.Data); i++ {
+		downLoadImage(FilePath+filename[i], responseInfo.Data[i].Urls["original"])
+	}
+	return nil
+}
+
+func downLoadImage(filename, path string) {
+
+	img, err := http.Get(path)
+	if err != nil {
+		fmt.Println(err)
+	}
+	content, _ := ioutil.ReadAll(img.Body)
+	fmt.Println(path)
+	fmt.Println(img)
+	defer img.Body.Close()
+	out, err := os.Create(filename)
+	defer out.Close()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	out.Write(content)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 }

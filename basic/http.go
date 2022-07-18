@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	ConfigPath          = "config/config.json"
+	ConfigPath          = "config/reddit.json"
 	OAuthEndpoint       = "https://oauth.reddit.com"
 	TokenAccessEndpoint = "https://www.reddit.com/api/v1/access_token"
 	UserAgent           = "<reddit>:<version 1.0.0> (by /u/sbsznmsl)"

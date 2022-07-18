@@ -4,3 +4,7 @@ config/
 README.md
 
 README_CN.md
+
+data/
+
+auth-example-token-cache.txt
