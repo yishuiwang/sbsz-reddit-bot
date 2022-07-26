@@ -8,13 +8,12 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"time"
 )
 
 const (
-	LoliconAPI = "https://api.lolicon.app/setu/v2"
-	Proxy      = "i.pixiv.re"
-	FilePath   = "./data/"
+	API      = "https://api.lolicon.app/setu/v2"
+	Proxy    = "i.pixiv.re"
+	FilePath = "./data/"
 )
 
 type ResponseInfo struct {
@@ -54,12 +53,12 @@ func GetImage(tags []string) error {
 		R18:   0,
 	}
 	body, _ := json.Marshal(rule)
-	request, err := http.NewRequest("POST", LoliconAPI, bytes.NewReader(body))
+	request, err := http.NewRequest("POST", API, bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
-	c := NewHttpClient(&HttpOptions{TryTime: 3, Timeout: 15 * time.Second})
-	c.SetHeader("Content-Type", "application/json")
+	c := http.Client{}
+	//c.SetHeader("Content-Type", "application/json")
 	response, err := c.Do(request)
 	if err != nil {
 		return err
@@ -90,8 +89,6 @@ func downLoadImage(filename, path string) {
 		fmt.Println(err)
 	}
 	content, _ := ioutil.ReadAll(img.Body)
-	fmt.Println(path)
-	fmt.Println(img)
 	defer img.Body.Close()
 	out, err := os.Create(filename)
 	defer out.Close()

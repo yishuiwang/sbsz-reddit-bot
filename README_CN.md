@@ -26,7 +26,6 @@ git clone https://github.com/yishuiwang/sbsz-reddit-bot.git
   <li>并回复评论</li>
   <li>并删除评论</li>
 </ul>
-
 <details>
 <summary>发帖管理</summary>
 <ul>
@@ -36,24 +35,22 @@ git clone https://github.com/yishuiwang/sbsz-reddit-bot.git
 
 
 <details>
+<summary>Pixiv图片</summary>
+<ul>
+  <li>推送Pixiv图片</li>
+</ul>
+<details>
 <summary>番剧管理</summary>
 <ul>
   <li>查询番剧基本信息</li>
   <li>查询角色</li>
 </ul>
-<details>
-<summary>Pixiv图片</summary>
-<ul>
-  <li>推送Pixiv图片</li>
-</ul>
-
-
 
 ## 作者
 
 👤 **sbsz**
 
-* Website: https://github.com/yishuiwang
+* `Website`: https://github.com/yishuiwang
 * Github: [@yishuiwang](https://github.com/yishuiwang)
 
 ## 🤝 贡献
